@@ -62,3 +62,7 @@ line-ending = "auto"
 
 [tool.pytest.ini_options]
 DJANGO_SETTINGS_MODULE = "apps.settings"
+
+[tool.djlint]
+ignore = "H030,H031"
+indent = 2
