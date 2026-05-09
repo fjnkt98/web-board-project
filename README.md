@@ -34,6 +34,7 @@ uv run django-admin startproject apps .
 Start app
 
 ```sh
+uv run django-admin startapp {{ name }}
 ```
 
 ## Usage
@@ -53,4 +54,5 @@ uvx ty check
 Test
 
 ```sh
+python manage.py test
 ```

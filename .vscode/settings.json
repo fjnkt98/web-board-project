@@ -11,5 +11,9 @@
       "source.organizeImports.ruff": "always"
     }
   },
-  "python.terminal.useEnvFile": true
+  "python.terminal.useEnvFile": true,
+  "[html]": {
+    "editor.tabSize": 2,
+    "editor.defaultFormatter": "monosans.djlint"
+  }
 }
