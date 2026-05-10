@@ -4,10 +4,7 @@ version = "0.1.0"
 description = "A Complete Beginner's Guide to Django"
 readme = "README.md"
 requires-python = ">=3.14"
-dependencies = [
-    "django>=6.0.5",
-    "django-widget-tweaks>=1.5.1",
-]
+dependencies = ["django>=6.0.5", "django-widget-tweaks>=1.5.1"]
 
 [dependency-groups]
 dev = ["django-stubs>=6.0.3", "djlint>=1.36.4", "ruff>=0.15.12", "ty>=0.0.34"]
@@ -69,3 +66,6 @@ DJANGO_SETTINGS_MODULE = "apps.settings"
 [tool.djlint]
 ignore = "H030,H031"
 indent = 2
+max_attribute_length = 200
+max_blank_lines = 1
+max_line_length = 200

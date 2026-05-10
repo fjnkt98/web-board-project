@@ -25,8 +25,9 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    "boards",
     "widget_tweaks",
+    "accounts",
+    "boards",
 ]
 
 MIDDLEWARE = [
@@ -90,6 +91,9 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+LOGIN_REDIRECT_URL = "home"
+LOGOUT_REDIRECT_URL = "home"
+LOGIN_URL = "login"
 
 # Internationalization
 # https://docs.djangoproject.com/en/6.0/topics/i18n/
@@ -108,3 +112,5 @@ STATIC_ROOT = BASE_DIR / "static"
 STATICFILES_DIRS = [
     BASE_DIR / "assets",
 ]
+
+EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
