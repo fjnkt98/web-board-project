@@ -7,7 +7,7 @@
 {% endblock %}
 {% block content %}
   <div class="mb-4">
-    <a href="{% url 'new-topic' board.pk %}" class="btn btn-primary">New Topic</a>
+    <a href="{% url 'new_topic' board.pk %}" class="btn btn-primary">New Topic</a>
   </div>
   <table class="table">
     <thead class="thead-inverse">
@@ -22,7 +22,9 @@
     <tbody>
       {% for topic in board.topics.all %}
         <tr>
-          <td>{{ topic.subject }}</td>
+          <td>
+            <a href="{% url 'topic_posts' board.pk topic.pk %}">{{ topic.subject }}</a>
+          </td>
           <td>{{ topic.starter.username }}</td>
           <td>0</td>
           <td>0</td>
