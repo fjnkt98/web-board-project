@@ -9,12 +9,19 @@ class Board(models.Model):
     def __str__(self) -> str:
         return self.name
 
+    def get_posts_count(self) -> int:
+        return Post.objects.filter(topic__board=self).count()
+
+    def get_last_post(self) -> Post | None:
+        return Post.objects.filter(topic__board=self).order_by("-created_at").first()
+
 
 class Topic(models.Model):
     subject = models.CharField(max_length=255)
     last_updated = models.DateTimeField(auto_now=True)
     board = models.ForeignKey(Board, related_name="topics", on_delete=models.CASCADE)
     starter = models.ForeignKey(User, related_name="topics", on_delete=models.CASCADE)
+    views = models.PositiveIntegerField(default=0)
 
     def __str__(self) -> str:
         return self.subject

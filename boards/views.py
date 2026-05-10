@@ -1,6 +1,7 @@
 from typing import TYPE_CHECKING
 
 from django.contrib.auth.decorators import login_required
+from django.db.models import Count
 from django.shortcuts import get_object_or_404, redirect, render
 
 from boards.forms import NewTopicForm, PostForm
@@ -19,7 +20,8 @@ def home(request: HttpRequest) -> HttpResponse:
 def board_topics(request: HttpRequest, board_id: int) -> HttpResponse:
     """Board topics view."""
     board = get_object_or_404(Board, id=board_id)
-    return render(request, "topics.html", {"board": board})
+    topics = board.topics.order_by("-last_updated").annotate(replies=Count("posts") - 1)  # ty:ignore[unresolved-attribute]
+    return render(request, "topics.html", {"board": board, "topics": topics})
 
 
 @login_required
@@ -49,6 +51,8 @@ def new_topic(request: HttpRequest, board_id: int) -> HttpResponse:
 def topic_posts(request: HttpRequest, board_id: int, topic_id: int) -> HttpResponse:
     """Topic posts view."""
     topic = get_object_or_404(Topic, id=topic_id, board_id=board_id)
+    topic.views += 1
+    topic.save()
     return render(request, "topic_posts.html", {"topic": topic})
 
 
