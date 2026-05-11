@@ -10,8 +10,8 @@ admin.site.site_title = "Web Board Admin"
 
 urlpatterns = [
     path("admin/", admin.site.urls),
-    path("", boards.views.home, name="home"),
-    path("boards/<int:board_id>/", boards.views.board_topics, name="board_topics"),
+    path("", boards.views.BoardListView.as_view(), name="home"),
+    path("boards/<int:board_id>/", boards.views.TopicListView.as_view(), name="board_topics"),
     path("boards/<int:board_id>/new/", boards.views.new_topic, name="new_topic"),
     path("boards/<int:board_id>/topics/<int:topic_id>/", boards.views.topic_posts, name="topic_posts"),
     path("boards/<int:board_id>/topics/<int:topic_id>/reply/", boards.views.reply_topic, name="reply_topic"),

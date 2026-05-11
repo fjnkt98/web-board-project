@@ -5,7 +5,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Count, QuerySet
 from django.shortcuts import get_object_or_404, redirect, render
 from django.utils import timezone
-from django.views.generic import UpdateView
+from django.views.generic import ListView, UpdateView
 
 from boards.forms import NewTopicForm, PostForm
 from boards.models import Board, Post, Topic
@@ -15,17 +15,25 @@ if TYPE_CHECKING:
     from django.http import HttpRequest, HttpResponse
 
 
-def home(request: HttpRequest) -> HttpResponse:
-    """Home view."""
-    boards = Board.objects.all()
-    return render(request, "home.html", {"boards": boards})
+class BoardListView(ListView):
+    model = Board
+    context_object_name = "boards"
+    template_name = "home.html"
 
 
-def board_topics(request: HttpRequest, board_id: int) -> HttpResponse:
-    """Board topics view."""
-    board = get_object_or_404(Board, id=board_id)
-    topics = board.topics.order_by("-last_updated").annotate(replies=Count("posts") - 1)  # ty:ignore[unresolved-attribute]
-    return render(request, "topics.html", {"board": board, "topics": topics})
+class TopicListView(ListView):
+    model = Topic
+    context_object_name = "topics"
+    template_name = "topics.html"
+    paginate_by = 20
+
+    def get_context_data(self, **kwargs: object) -> dict[str, object]:
+        kwargs["board"] = self.board
+        return super().get_context_data(**kwargs)  # ty:ignore[invalid-argument-type]
+
+    def get_queryset(self) -> QuerySet:
+        self.board = get_object_or_404(Board, pk=self.kwargs.get("board_id"))
+        return self.board.topics.order_by("-last_updated").annotate(replies=Count("posts") - 1)  # ty:ignore[unresolved-attribute]
 
 
 @login_required
