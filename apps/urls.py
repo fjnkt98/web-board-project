@@ -15,6 +15,7 @@ urlpatterns = [
     path("boards/<int:board_id>/new/", boards.views.new_topic, name="new_topic"),
     path("boards/<int:board_id>/topics/<int:topic_id>/", boards.views.topic_posts, name="topic_posts"),
     path("boards/<int:board_id>/topics/<int:topic_id>/reply/", boards.views.reply_topic, name="reply_topic"),
+    path("boards/<int:board_id>/topics/<int:topic_id>/posts/<int:post_id>/edit", boards.views.PostUpdateView.as_view(), name="edit_post"),
     path("accounts/signup/", accounts.views.signup, name="signup"),
     path("accounts/login/", auth_views.LoginView.as_view(template_name="login.html"), name="login"),
     path("accounts/logout/", auth_views.LogoutView.as_view(), name="logout"),

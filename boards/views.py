@@ -1,13 +1,17 @@
 from typing import TYPE_CHECKING
 
 from django.contrib.auth.decorators import login_required
-from django.db.models import Count
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.db.models import Count, QuerySet
 from django.shortcuts import get_object_or_404, redirect, render
+from django.utils import timezone
+from django.views.generic import UpdateView
 
 from boards.forms import NewTopicForm, PostForm
 from boards.models import Board, Post, Topic
 
 if TYPE_CHECKING:
+    from django.forms import ModelForm
     from django.http import HttpRequest, HttpResponse
 
 
@@ -73,3 +77,22 @@ def reply_topic(request: HttpRequest, board_id: int, topic_id: int) -> HttpRespo
         form = PostForm()
 
     return render(request, "reply_topic.html", {"topic": topic, "form": form})
+
+
+class PostUpdateView(LoginRequiredMixin, UpdateView):
+    model = Post
+    fields = ("message",)
+    template_name = "edit_post.html"
+    pk_url_kwarg = "post_id"
+    context_object_name = "post"
+
+    def get_queryset(self) -> QuerySet:
+        queryset = super().get_queryset()
+        return queryset.filter(created_by=self.request.user)
+
+    def form_valid(self, form: ModelForm) -> HttpResponse:
+        post: Post = form.save(commit=False)
+        post.updated_by = self.request.user
+        post.updated_at = timezone.now()
+        post.save()
+        return redirect("topic_posts", board_id=post.topic.board.pk, topic_id=post.topic.pk)
